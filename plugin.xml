@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.7"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.zefer.pixelmeister.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Perspective"
+            class="org.zefer.pixelmeister.Perspective"
+            id="org.zefer.pixelmeister.perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.zefer.pixelmeister.CodeEditView"
+            id="org.zefer.pixelmeister.codeeditview"
+            name="Code Editor"
+            restorable="true">
+      </view>
+      <view
+            class="org.zefer.pixelmeister.DeviceView"
+            id="org.zefer.pixelmeister.deviceview"
+            name="Device View"
+            restorable="true">
+      </view>
+      <view
+            class="org.zefer.pixelmeister.ResourcesView"
+            id="org.zefer.pixelmeister.resourcesview"
+            name="Resources and Functions"
+            restorable="true">
+      </view>
+      <view
+            class="org.zefer.pixelmeister.ConsoleView"
+            id="org.zefer.pixelmeister.consoleview"
+            name="Console"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="*">
+         <view
+               id="org.zefer.pixelmeister.codeeditview"
+               minimized="false"
+               ratio=".41"
+               relationship="left"
+               relative="org.eclipse.ui.editorss"
+               standalone="true">
+         </view>
+         <view
+               id="org.zefer.pixelmeister.resourcesview"
+               minimized="false"
+               relationship="stack"
+               relative="org.zefer.pixelmeister.codeeditview">
+         </view>
+         <view
+               id="org.zefer.pixelmeister.deviceview"
+               minimized="false"
+               relationship="right"
+               relative="org.eclipse.ui.editorss">
+         </view>
+         <view
+               id="org.zefer.pixelmeister.consoleview"
+               minimized="false"
+               relationship="bottom"
+               relative="org.zefer.pixelmeister.deviceview">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="menu.file"
+               label="File"
+               mnemonic="F">
+            <command
+                  commandId="org.zefer.pixelmeister.file.new"
+                  icon="IMG_TOOL_NEW_WIZARD"
+                  label="New"
+                  mnemonic="N"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.file.open"
+                  icon="icons/open_file.png"
+                  label="Open..."
+                  mnemonic="O"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.file.save"
+                  icon="IMG_ETOOL_SAVE_EDIT"
+                  label="Save"
+                  mnemonic="S"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.file.saveAs"
+                  icon="IMG_ETOOL_SAVEAS_EDIT"
+                  label="Save As..."
+                  mnemonic="A"
+                  style="push">
+            </command>
+            <separator
+                  name="org.zefer.pixelmeister.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.zefer.pixelmeister.autosave"
+                  label="Autosave"
+                  mnemonic="u"
+                  style="toggle">
+            </command>
+            <separator
+                  name="org.zefer.pixelmeister.separator2"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.file.exit"
+                  label="Exit"
+                  mnemonic="E">
+            </command>
+         </menu>
+         <menu
+               label="Edit"
+               mnemonic="E">
+            <command
+                  commandId="org.zefer.pixelmeister.command.undo"
+                  label="Undo"
+                  mnemonic="U"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.command.redo"
+                  label="Redo"
+                  mnemonic="R"
+                  style="push">
+            </command>
+            <separator
+                  name="org.zefer.pixelmeister.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.zefer.pixelmeister.command.find"
+                  label="Find/Replace..."
+                  mnemonic="F"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               label="View"
+               mnemonic="V">
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  label="Show View..."
+                  mnemonic="V"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.view.show.rulers"
+                  label="Show Rulers"
+                  mnemonic="R"
+                  style="toggle">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.view.show.grid"
+                  label="Show Grid"
+                  mnemonic="G"
+                  style="toggle">
+            </command>
+         </menu>
+         <menu
+               label="Tools"
+               mnemonic="T">
+            <command
+                  commandId="org.zefer.pixelmeister.command.import.font"
+                  icon="icons/import_font.png"
+                  label="Import Font..."
+                  mnemonic="F"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.command.import.image"
+                  icon="icons/import_image.png"
+                  label="Import Image..."
+                  mnemonic="I"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.command.import.clipart.icon"
+                  icon="icons/icons.gif"
+                  label="Import Clipart Icon..."
+                  mnemonic="C"
+                  style="push">
+            </command>
+            <separator
+                  name="org.zefer.pixelmeister.separator3"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.zefer.pixelmeister.command.export.sketch"
+                  icon="icons/export_wiz.gif"
+                  label="Export Sketch..."
+                  mnemonic="S"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               label="Help"
+               mnemonic="H">
+            <command
+                  commandId="org.eclipse.ui.help.aboutAction"
+                  label="About Pixelmeister"
+                  mnemonic="A"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.commands.home"
+                  label="Pixelmeister Home"
+                  mnemonic="P"
+                  style="push">
+            </command>
+            <separator
+                  name="org.zefer.pixelmeister.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.zefer.pixelmeister.commands.License"
+                  label="Licensing"
+                  mnemonic="L"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.equinox.p2.ui.sdk.update"
+                  label="Check or Updates"
+                  mnemonic="C"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="org.zefer.pixelmeister.toolbar">
+            <command
+                  commandId="org.zefer.pixelmeister.file.new"
+                  icon="IMG_TOOL_NEW_WIZARD"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.file.open"
+                  icon="icons/open_file.png"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.file.save"
+                  icon="IMG_ETOOL_SAVE_EDIT"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.file.saveAs"
+                  icon="IMG_ETOOL_SAVEAS_EDIT"
+                  style="push">
+            </command>
+            <separator
+                  name="org.zefer.pixelmeister.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.zefer.pixelmeister.command.run"
+                  icon="icons/start_task.gif"
+                  style="push"
+                  tooltip="Run Sketch (Ctrl-F11)">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.command.terminate"
+                  disabledIcon="IMG_ELCL_STOP_DISABLED"
+                  icon="IMG_ELCL_STOP"
+                  style="push"
+                  tooltip="Terminate Running Sketch">
+            </command>
+            <separator
+                  name="org.zefer.pixelmeister.separator2"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.zefer.pixelmeister.command.import.image"
+                  icon="icons/import_image.png"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.command.import.clipart.icon"
+                  icon="icons/icons.gif"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.zefer.pixelmeister.command.import.font"
+                  icon="icons/import_font.png"
+                  style="push">
+            </command>
+            <separator
+                  name="org.zefer.pixelmeister.separator3"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.zefer.pixelmeister.command.export.sketch"
+                  icon="icons/export_wiz.gif"
+                  style="push">
+            </command>
+         </toolbar>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.trim.status">
+         <toolbar
+               id="org.zefer.pixelmeister.toolbar4">
+            <separator
+                  name="org.zefer.pixelmeister.separator4"
+                  visible="true">
+            </separator>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.zefer.pixelmeister.application"
+            name="Pixelmeister">
+         <property
+               name="windowImages"
+               value="icons/icon-16px.png,icons/icon-32px.png,icns/48.png,icns/64.png,icns/128.png">
+         </property>
+         <property
+               name="appName"
+               value="Pixelmeister">
+         </property>
+         <property
+               name="aboutText"
+               value="Pixelmeister&#x0A;User interface modeller for microelectronic devices&#x0A;&#x0A;zefer|org (c)2013&#x0A;&#x0A;_">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.AutosaveCommand"
+            id="org.zefer.pixelmeister.autosave"
+            name="Autosave">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.SlowdownCommand"
+            id="org.zefer.pixelmeister.slowdown"
+            name="Slowdown &quot;while(1)&quot;">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:true"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.OpenCommand"
+            id="org.zefer.pixelmeister.file.open"
+            name="Open">
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.NewCommand"
+            id="org.zefer.pixelmeister.file.new"
+            name="New">
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.SaveCommand"
+            id="org.zefer.pixelmeister.file.save"
+            name="Save">
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.SaveAsCommand"
+            id="org.zefer.pixelmeister.file.saveAs"
+            name="Save As">
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.ShowRulersCommand"
+            id="org.zefer.pixelmeister.view.show.rulers"
+            name="Show Rulers">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:true"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.ShowGridCommand"
+            id="org.zefer.pixelmeister.view.show.grid"
+            name="Show Grid">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.ImportImageCommand"
+            id="org.zefer.pixelmeister.command.import.image"
+            name="Import Image">
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.ImportFontCommand"
+            id="org.zefer.pixelmeister.command.import.font"
+            name="Import Font">
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.ExportSketchCommand"
+            id="org.zefer.pixelmeister.command.export.sketch"
+            name="Export Sketch">
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.LicensingHandler"
+            id="org.zefer.pixelmeister.commands.License"
+            name="License">
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.GoHome"
+            id="org.zefer.pixelmeister.commands.home"
+            name="Home">
+      </command>
+      <command
+            defaultHandler="org.zefer.pixelmeister.commands.ImportClipartIconCommand"
+            id="org.zefer.pixelmeister.command.import.clipart.icon"
+            name="Import Clipart Icon">
+      </command>
+      <command
+            id="org.zefer.pixelmeister.command.find"
+            name="Find/Replace">
+      </command>
+      <command
+            id="org.zefer.pixelmeister.command.redo"
+            name="Redo">
+      </command>
+      <command
+            id="org.zefer.pixelmeister.command.undo"
+            name="Undo">
+      </command>
+      <command
+            id="org.zefer.pixelmeister.command.run"
+            name="Run">
+      </command>
+      <command
+            id="org.zefer.pixelmeister.command.terminate"
+            name="Terminate">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.themes">
+		<theme
+			id="org.zefer.pixelmeister.darker.ui.theme"
+			name="Darker Theme">
+<!--
+"org.eclipse.ui.workbench.TAB_TEXT_FONT";    
+"org.eclipse.ui.workbench.VIEW_MESSAGE_TEXT_FONT";
+
+"org.eclipse.ui.workbench.ACTIVE_TAB_TEXT_COLOR";
+"org.eclipse.ui.workbench.ACTIVE_TAB_BG_START";
+"org.eclipse.ui.workbench.ACTIVE_TAB_BG_END";
+"org.eclipse.ui.workbench.ACTIVE_TAB_HIGHLIGHT";
+"org.eclipse.ui.workbench.ACTIVE_TAB_HIGHLIGHT_START";
+"org.eclipse.ui.workbench.ACTIVE_TAB_PERCENT";
+"org.eclipse.ui.workbench.ACTIVE_TAB_VERTICAL";
+
+
+"org.eclipse.ui.workbench.ACTIVE_NOFOCUS_TAB_TEXT_COLOR";
+"org.eclipse.ui.workbench.ACTIVE_NOFOCUS_TAB_BG_START";
+"org.eclipse.ui.workbench.ACTIVE_NOFOCUS_TAB_BG_END";    
+"org.eclipse.ui.workbench.ACTIVE_NOFOCUS_TAB_PERCENT";
+"org.eclipse.ui.workbench.ACTIVE_NOFOCUS_TAB_VERTICAL";
+
+
+"org.eclipse.ui.workbench.INACTIVE_TAB_TEXT_COLOR";
+"org.eclipse.ui.workbench.INACTIVE_TAB_BG_START";
+"org.eclipse.ui.workbench.INACTIVE_TAB_BG_END";
+"org.eclipse.ui.workbench.INACTIVE_TAB_PERCENT";
+"org.eclipse.ui.workbench.INACTIVE_TAB_VERTICAL";    
+-->
+   
+<colorOverride	  id="org.eclipse.ui.workbench.ACTIVE_TAB_BG_START"				value="120,120,120"/>
+<!--colorOverride	  id="org.eclipse.ui.workbench.ACTIVE_TAB_BG_END"				value="227,167,36"/-->
+<colorOverride	  id="org.eclipse.ui.workbench.ACTIVE_TAB_BG_END"				value="92,92,92"/>
+<colorOverride	  id="org.eclipse.ui.workbench.ACTIVE_TAB_TEXT_COLOR"			value="255,255,255"/>
+<data			name="org.eclipse.ui.workbench.ACTIVE_TAB_PERCENT"				value="99"/>
+<data			name="org.eclipse.ui.workbench.ACTIVE_TAB_HIGHLIGHT"			value="true"/>
+<colorOverride	  id="org.eclipse.ui.workbench.ACTIVE_TAB_HIGHLIGHT_START"		value="255,0,0"/>
+<data			name="org.eclipse.ui.workbench.ACTIVE_TAB_VERTICAL"				value="true"/>
+   
+<colorOverride	  id="org.eclipse.ui.workbench.ACTIVE_NOFOCUS_TAB_BG_START"		value="100,100,100"/>
+<colorOverride	  id="org.eclipse.ui.workbench.ACTIVE_NOFOCUS_TAB_BG_END"		value="92,92,92"/>
+<colorOverride	  id="org.eclipse.ui.workbench.ACTIVE_NOFOCUS_TAB_TEXT_COLOR"	value="220,220,220"/>
+
+<colorOverride	  id="org.eclipse.ui.workbench.INACTIVE_TAB_BG_START"			value="100,100,100"/>
+<colorOverride	  id="org.eclipse.ui.workbench.INACTIVE_TAB_BG_END"				value="92,92,92"/>
+<colorOverride	  id="org.eclipse.ui.workbench.INACTIVE_TAB_TEXT_COLOR"			value="220,220,220"/>
+
+<colorOverride	  id="org.eclipse.ui.editors.backgroundColor"					value="255,200,100"/>
+<colorOverride	  id="org.eclipse.ui.editors.foregroundColor"					value="255,0,0"/>
+
+
+<colorOverride	  id="org.zefer.darkertheme.BACKGROUND"							value="92,92,92"/>
+<colorOverride	  id="org.zefer.darkertheme.FOREGROUND"							value="220,220,220"/>
+
+<colorOverride	  id="org.zefer.darkertheme.EDITOR_BACKGROUND"					value="166,166,166"/>
+<colorOverride	  id="org.zefer.darkertheme.HIGHLIGHT"							value="227,167,36"/>
+<data			name="org.zefer.darkertheme.EDITOR_NO_BORDERS"					value="true"/>
+<colorOverride
+      id="org.eclipse.ui.editors.currentLineColor"
+      value="255,0,0">
+</colorOverride>
+
+
+
+  <!-- 
+   <colorOverride
+         id="org.eclipse.ui.workbench.INACTIVE_TAB_TEXT_COLOR"
+         value="134,134,134">
+   </colorOverride>
+   <colorOverride
+         id="org.eclipse.ui.workbench.INACTIVE_TAB_BG_START"
+         value="74,74,74">
+   </colorOverride>
+   <colorOverride
+         id="org.eclipse.ui.workbench.INACTIVE_TAB_BG_END"
+         value="68,68,68">
+   </colorOverride> 
+   -->
+      </theme>         
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.zefer.pixelmeister.commands.UndoCommand"
+            commandId="org.zefer.pixelmeister.command.undo">
+         <enabledWhen>
+            <test
+                  forcePluginActivation="true"
+                  property="org.zefer.pixelmeister.UNDO"
+                  value="true">
+            </test>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.zefer.pixelmeister.commands.RedoCommand"
+            commandId="org.zefer.pixelmeister.command.redo">
+         <enabledWhen>
+            <test
+                  forcePluginActivation="true"
+                  property="org.zefer.pixelmeister.REDO"
+                  value="true">
+            </test>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.zefer.pixelmeister.commands.FindReplaceCommand"
+            commandId="org.zefer.pixelmeister.command.find">
+         <enabledWhen>
+            <test
+                  forcePluginActivation="true"
+                  property="org.zefer.pixelmeister.FIND"
+                  value="true">
+            </test>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.zefer.pixelmeister.commands.RunCommand"
+            commandId="org.zefer.pixelmeister.command.run">
+         <enabledWhen>
+            <test
+                  forcePluginActivation="true"
+                  property="org.zefer.pixelmeister.RUN"
+                  value="true">
+            </test>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.zefer.pixelmeister.commands.TerminateCommand"
+            commandId="org.zefer.pixelmeister.command.terminate">
+         <enabledWhen>
+            <test
+                  forcePluginActivation="true"
+                  property="org.zefer.pixelmeister.TERMINATE"
+                  value="true">
+            </test>
+         </enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.zefer.pixelmeister.commands.PropertyTester"
+            id="org.zefer.pixelmeister.propertyTester"
+            namespace="org.zefer.pixelmeister"
+            properties="UNDO,REDO,FIND,RUN,TERMINATE"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
+
+</plugin>

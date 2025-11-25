@@ -1,0 +1,11 @@
+findFirstFile(tinyFAT._directory_entry de) : byte	findFirstFile(de);
+findNextFile(tinyFAT._directory_entry de) : byte	findNextFile(de);
+openFile(String filename, byte mode) : byte	openFile(fn, mode);
+readBinary() : int	readBinary();
+readLn(String str, int bufSize) : int	readLn(str, bufSize);
+writeLn(String str) : int	writeLn(str);
+closeFile() : void	closeFile();
+exists(String filename) : boolean	exists(fn);
+rename(String filename1, String filename2) : boolean	rename(fn1, fn2);
+delFile(String filename) : boolean	delFile(fn);
+create(String filename) : boolean	create(fn);

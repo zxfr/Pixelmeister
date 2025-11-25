@@ -1,0 +1,27 @@
+clrScr() : void	clrScr();
+dispose() : void	dispose();
+drawPixel(int x, int y) : void	drawPixel(x, y);
+drawPixel(double x, double y) : void	drawPixel(x, y);
+fillRect(int x1, int y1, int x2, int y2) : void	fillRect(x1, y1, x2, y2);
+setColor(int r, int g, int b) : void	setColor(r, g, b);
+setBackColor(int r, int g, int b) : void	setBackColor(r, g, b);
+setFont(int[] fontBytes) : void	setFont(fontBytes);
+fillScr(int r, int g, int b) : void	fillScr(r, g, b);
+drawLine(double x1, double y1, double x2, double y2) : void	drawLine(x1, y1, x2, y2);
+drawLine(int x1, int y1, int x2, int y2) : void	drawLine(x1, y1, x2, y2);
+drawRect(int x1, int y1, int x2, int y2) : void	drawRect(x1, y1, x2, y2);
+drawRoundRect(int x1, int y1, int x2, int y2) : void	drawRoundRect(x1, y1, x2, y2);
+fillRoundRect(int x1, int y1, int x2, int y2) : void	fillRoundRect(x1, y1, x2, y2);
+drawCircle(int x, int y, int radius) : void	drawCircle(x, y, radius);
+fillCircle(int x, int y, int radius) : void	fillCircle(x, y, radius);
+printChar(CurrentFont cfont, char c, int x, int y) : void	printChar(cfont, c, x, y);
+rotateChar(CurrentFont cfont, char c, int x, int y, int pos, int deg) : void	rotateChar(cfont, c, x, y, pos, deg);
+print(String st, int x, int y) : void	print(st, x, y);
+print(String st, int x, int y, int deg) : void	print(st, x, y, deg);
+printNumI(long num, int x, int y) : void	printNumI(num, x, y);
+printNumF(double num, byte dec, int x, int y) : void	printNumF(num, dec, x, y);
+drawBitmap(int x, int y, int sx, int sy, int[] data) : void	drawBitmap(x, y, sx, sy, data);
+drawBitmap(int x, int y, int sx, int sy, int[] data, int scale) : void	drawBitmap(x, y, sx, sy, data, scale);
+drawBitmap(int x, int y, int sx, int sy, int[] data, int deg, int rox, int roy) : void	drawBitmap(x, y, sx, sy, data, deg, rox, roy);
+loadBitmap(int x, int y, int sx, int sy, String filename) : byte	loadBitmap(x, y, sx, sy, filename);
+

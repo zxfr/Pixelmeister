@@ -1,0 +1,11 @@
+setFont(int[] font) : void	setFont(font);
+setBackground(int r, int g, int b) : void	setBackground(r, g, b);
+setForeground(int r, int g, int b) : void	setForeground(r, g, b);
+getLineHeight() : int	getLineHeight();
+getBaseline() : int	getBaseline();
+getTextWidth(String text) : int	getTextWidth(text);
+getTextWidth(String text, int[] kerning) : int	getTextWidth(text, kerning);
+print(int xx, int yy, String text) : void	print(xx, yy, text);
+print(int xx, int yy, String text, int[] kerning) : void	print(xx, yy, text, kerning);
+clean(int xx, int yy, String text) : void	clean(xx, yy, text);
+clean(int xx, int yy, String text, int[] kerning) : void	clean(xx, yy, text, kerning);

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Pixelmeister" id="org.zefer.pixelmeister.product" application="org.zefer.pixelmeister.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <text>
+         Pixelmeister
+User interface modeller for microelectronic devices
+
+zefer|org (c)2013
+
+_
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/org.zefer.pixelmeister/icons/icon-16px.png" i32="/org.zefer.pixelmeister/icons/icon-32px.png" i48="icns/48.png" i64="icns/64.png" i128="icns/128.png"/>
+
+   <splash
+      location="org.zefer.pixelmeister" />
+   <launcher name="Pixelmeister">
+      <macosx icon="/org.zefer.pixelmeister/icons/pixelmeister.icns"/>
+      <solaris/>
+      <win useIco="false">
+         <bmp
+            winSmallHigh="/org.zefer.pixelmeister/icons/icon-16px.bmp"
+            winMediumHigh="/org.zefer.pixelmeister/icons/icon-32px.bmp"/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
+   <license>
+        <text>
+   End-user License Agreement for &quot;Pixelmeister&quot; Software Product
+
+This End-User License Agreement (‘EULA’) is a legally valid contract between the end user of the software and zefer|org, (hereinafter referred to as ‘Vendor’). Please read this Agreement thoroughly before acquiring the software. Upon acquisition of the software, the following provisions will be deemed to have been agreed to with binding effect.
+
+1. Copyright
+This software product, including any handbooks, instructions and/or other information material, is protected by copyright. Any copy protection present in the software, a copyright notice, a registration number recorded in it or other features serving to identify the program may not be removed.
+
+2. License agreement
+Unless determined otherwise, Vendor grants the software’s end user the simple right to install the software on a device and use it for an unlimited period of time. The right to use is limited to the software’s object code. It will expire if the end user violates the conditions of use established in this Agreement. Vendor is not obligated to provide the end user with the source code. Unless determined otherwise in the following, the acquisition of this license does not entitle the end user to provide, install and/or run the software on multiple devices at once, create and/or distribute copies of the software, transfer the software from one device to another by electronic means or over a network after its original download or installation on a device, modify, decompile, adapt or translate the software or combine it with other software, or reengineer or disassembly the software. The right to use is limited to the specific software product acquired in the respective version thereof and does not extend to subsequent versions of the software. The license agreement does not provide any rights to grant a sublicense to the software to third parties. Vendor reserves all further rights, in particular the rights to dissemination, duplication and publication.
+
+3. Special forms of use
+The acquisition of the software under the stipulation of a particular term of contract only entitles the end user to use the software until the term of contract expires. The acquisition of a technician license entitles the person in question to use the software on different systems, as long as the software is not used on multiple systems simultaneously. The acquisition of a site license (multi-station license) entitles the end user to use the software on an unlimited number of computers at a particular company site, while the acquisition of a company license entitles the end user to use the software on all computers at all sites of the company. The use of free software from print media or online media allows private use only, unless a separate agreement for commercial purposes of use provides otherwise. 
+
+4. Guarantee
+Vendor is in no way responsible for malfunctions or damage caused by modification of the software or the use of the software in conjunction with hardware configurations, platforms or operating systems other than the recommended or intended hardware configuration, platform or operating system. Any liability for defects for alpha/beta versions (pre-release versions) relinquished free of charge is excluded. 
+
+5. Miscellaneous
+Should individual provisions of this Agreement prove to be ineffective, the validity of the remaining provisions shall not be affected. In such case, a provision which suits the economic interest of the Contracting Parties shall be agreed upon to take the place of the ineffective provision. This End-User License Agreement can be viewed and printed out at http://pd4ml.com/pd4ml_probe_license.html
+
+(Status as of: December 2012)
+         </text>
+   </license>
+
+   <plugins>
+      <plugin id="com.ibm.icu"/>
+      <plugin id="org.eclipse.core.commands"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.observable"/>
+      <plugin id="org.eclipse.core.databinding.property"/>
+      <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
+      <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.jface"/>
+      <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.swt"/>
+      <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.ui"/>
+      <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.zefer.pd4ml.libs"/>
+      <plugin id="org.zefer.pd4ml.tester"/>
+   </plugins>
+
+   <features>
+      <feature id="org.eclipse.rcp"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
+      <feature id="org.zefer.pixelmeister.updatemanager" version="1.0.0.qualifier"/>
+   </features>
+
+
+</product>

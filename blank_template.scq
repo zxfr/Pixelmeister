@@ -1,0 +1,5 @@
+// See http://pd4ml.com/pixelmeister/pixels.htm for PIXELS API documentation.
+
+pxs.setBackground(0, 0, 0);
+pxs.setColor(255, 255, 255);
+pxs.clear();

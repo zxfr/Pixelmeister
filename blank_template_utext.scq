@@ -1,0 +1,8 @@
+// See http://pd4ml.com/pixelmeister/ for UTEXT API documentation.
+
+utft.setBackColor(0, 0, 0);
+utft.setColor(255, 255, 255);
+utext.setBackground(0, 0, 0);
+utext.setForeground(255, 255, 255);
+utft.clrScr();
+
