@@ -475,10 +475,10 @@ public class ImportFontDialog extends Dialog {
 		Label labelZoom = new Label(shell, SWT.NONE);
 		FormData fd_labelZoom = new FormData();
 		fd_labelZoom.top = new FormAttachment(btnShowGlyphBoundaries, 4);
-		fd_labelZoom.left = new FormAttachment(btnShowBaseline, 10);
+		fd_labelZoom.left = new FormAttachment(btnShowBaseline, 6);
 		fd_labelZoom.height = 16;
 		labelZoom.setLayoutData(fd_labelZoom);
-		labelZoom.setText("     Zoom");
+		labelZoom.setText("Zoom");
 
 
         zoom = new Combo(shell, SWT.NONE);
@@ -591,8 +591,8 @@ public class ImportFontDialog extends Dialog {
             }
         });
 		FormData fd_spinnerL = new FormData();
-		fd_spinnerL.top = new FormAttachment(btnEnableEdit, 4);
-		fd_spinnerL.left = new FormAttachment(leftMarginLabel, 10);
+		fd_spinnerL.top = new FormAttachment(btnEnableEdit, 8);
+		fd_spinnerL.left = new FormAttachment(leftMarginLabel, 6);
 		fd_spinnerL.height = 16;
 		spinnerL.setLayoutData(fd_spinnerL);
 		spinnerL.setVisible(false);
@@ -604,7 +604,7 @@ public class ImportFontDialog extends Dialog {
 		fd_rightMargin.left = new FormAttachment(btnShowBaseline, 10);
 		fd_rightMargin.height = 16;
 		rightMarginLabel.setLayoutData(fd_rightMargin);
-		rightMarginLabel.setText("     Right");
+		rightMarginLabel.setText("  Right");
 		rightMarginLabel.setVisible(false);
 
 		spinnerR = new Spinner(shell, SWT.BORDER);
@@ -661,8 +661,8 @@ public class ImportFontDialog extends Dialog {
             }
         });
 		FormData fd_spinnerR = new FormData();
-		fd_spinnerR.top = new FormAttachment(btnEnableEdit, 4);
-		fd_spinnerR.left = new FormAttachment(rightMarginLabel, 10);
+		fd_spinnerR.top = new FormAttachment(btnEnableEdit, 8);
+		fd_spinnerR.left = new FormAttachment(rightMarginLabel, 6);
 		fd_spinnerR.height = 16;
 		spinnerR.setLayoutData(fd_spinnerR);
 		spinnerR.setVisible(false);
