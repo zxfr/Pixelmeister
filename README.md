@@ -31,7 +31,7 @@ But the ability to copy generated code snippets and imported resources and paste
 
 ## uText Library
 
-The current state of the library can be found at this link.
+The current state of the library can be found at [this link](https://github.com/zxfr/uText).
 The library can be easily ported to any platform that supports horizontal and vertical line rendering.
 
 ### uText API
