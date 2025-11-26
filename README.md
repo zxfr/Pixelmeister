@@ -9,6 +9,10 @@
 
 ## Installation
 
+It will take some time for the `Pixelmester` installer generators and online update repository to be revived.
+
+Therefore, the current available installation method requires pre-installing the `Eclipse RCP` environment and downloading and running `Pixelmester` as a regular project.
+
 ## Features
 
 You can find a slightly updated Arduino-centric user guide [at this link](i/MANUAL.md). The ability to export a ready-to-compile Arduino sketch is probably not particularly useful these days, given the many alternative RAD tools available to developers that are superior to the native Arduino IDE, which is unfriendly to complex projects.
