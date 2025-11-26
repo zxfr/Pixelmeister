@@ -3,7 +3,7 @@
 `Pixelmeister` is a platform-independent tool designed to simplify the development of graphical user interfaces for microelectronic devices. It currently emulates the `Pixels` and `UTFT` graphics libraries (including `uText`).
 `Pixelmeister` helps simulate user interfaces without the need to download and test the code on the target device after each UI customization step. This tool can also convert `TTF`/`OTF` images, icons, and fonts into a very compact format suitable for use in microcontroller programs.
 
-In the context you can think of `UTFT` as an abstract graphics library that you can replace with minimal effort with any other suitable one. For example, `U8G2` for `ESP32`. All it requires is support for the drawing of vertical and horizontal lines.
+In the context you can think of `UTFT` as an abstract graphics library that you can replace with minimal effort with any other suitable one. For example, `U8G2` for `ESP32`. All it requires is support for the drawing of vertical and horizontal lines of the selected color.
 
 ![Image](i/pixelmeister14.png "icon")
 
