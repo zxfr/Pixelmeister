@@ -34,7 +34,7 @@ Installation is complete now.
 
 ## Features
 
-You can find a slightly updated `Arduino`-centric user guide [at this link](i/MANUAL.md). The ability to export a ready-to-compile Arduino sketch is probably not particularly useful these days, given the many alternative RAD tools available to developers that are superior to the native Arduino IDE, which is as a rule unfriendly to complex projects.
+You can find a slightly updated `Arduino`-centric user guide [at this link](i/MANUAL.md). The ability to export a ready-to-compile Arduino sketch is probably not particularly useful these days, given the many alternative RAD tools available to developers that are superior to the annoying native Arduino IDE.
 
 But the ability to copy generated and tested code snippets and imported resources and paste them into the RAD of your choice makes this tool a useful addition to any development environment.
 
