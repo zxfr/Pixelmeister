@@ -58,5 +58,5 @@ The library can be easily ported to any platform that supports horizontal and ve
 
 ### uText API
 
-[Read about uText Library](i/MANUAL.md#utext)
+[Read about uText Library](i/MANUAL.md#utext-library)
 
