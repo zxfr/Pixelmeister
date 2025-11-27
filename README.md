@@ -11,7 +11,7 @@ In the context you can think of `UTFT` as an abstract graphics library that you 
 
 ## Installation
 
-It will take some time for the `Pixelmester` installer generators and online update repository to be revived.
+It will take some time for the `Pixelmester` installer packagers and online update repository to be revived (at the moment, the task is not a priority).
 
 Therefore, the current available installation method requires pre-installing the `Eclipse RCP` environment and downloading and running `Pixelmester` as a regular project.
 
