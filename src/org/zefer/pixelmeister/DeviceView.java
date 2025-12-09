@@ -745,7 +745,6 @@ public class DeviceView extends DataLayerView {
         zoom.addSelectionListener(new SelectionAdapter() {
         	public void widgetSelected(SelectionEvent e) {
         		zoomFactor = 1 << Math.max(0, zoom.getSelectionIndex());
-        		System.out.println("ZOOM x" + zoomFactor);
 				updateGui();
 				drawCanvasBackground();
 				redrawCanvas(0, 0, width + rulerWidth, height + rulerHeight);

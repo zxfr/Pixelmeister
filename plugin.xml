@@ -429,11 +429,6 @@
             name="Export Sketch">
       </command>
       <command
-            defaultHandler="org.zefer.pixelmeister.commands.LicensingHandler"
-            id="org.zefer.pixelmeister.commands.License"
-            name="License">
-      </command>
-      <command
             defaultHandler="org.zefer.pixelmeister.commands.GoHome"
             id="org.zefer.pixelmeister.commands.home"
             name="Home">

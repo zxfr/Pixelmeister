@@ -14,8 +14,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -105,6 +107,9 @@ public class ImportFontDialog extends Dialog {
 	private int lTrim = 0;
 	private int rTrim = 0;
 
+	private boolean generateAutokerning = true;
+	private String range;
+	private final Color glyphGridColor = new Color(240, 240, 240);
 	
 	/**
 	 * Create the dialog.
@@ -164,7 +169,7 @@ public class ImportFontDialog extends Dialog {
 
 		charactersToImport.setText("A-Z a-z . , - + #x0021-#x0024 #00048-#00057");
 		
-        generateGlyphImages(charactersToImport.getText(), -1, -1, 0, 0);
+        generateGlyphImages(charactersToImport.getText(), -1, -1);
         // "abcdABCDXYZ}{- 1234567890:");
 
 		shell.open();
@@ -233,7 +238,10 @@ public class ImportFontDialog extends Dialog {
 		}
 		charactersToImport.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				generateGlyphImages(charactersToImport.getText(), -1, -1, 0, 0);
+				if (rasterFont != null) {
+					rasterFont.reset();
+				}
+				generateGlyphImages(charactersToImport.getText(), -1, -1);
 			}
 		});
 		FormData fd_charactersToImport = new FormData();
@@ -318,7 +326,7 @@ public class ImportFontDialog extends Dialog {
 					double i = Double.parseDouble(fontSizeCombo.getText());
 					if ( guiInitialized && i > 5 && i < 121 ) {
 		        		rasterFont.reset();
-						generateGlyphImages(charactersToImport.getText(), i, -1, 0, 0);
+						generateGlyphImages(charactersToImport.getText(), i, -1);
 					}
 				} catch (NumberFormatException e1) {
 					if ( guiInitialized ) {
@@ -331,7 +339,7 @@ public class ImportFontDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
         		rasterFont.reset();
-				generateGlyphImages(charactersToImport.getText(), -1, -1, 0, 0);
+				generateGlyphImages(charactersToImport.getText(), -1, -1);
 			}
 		});
 
@@ -361,7 +369,7 @@ public class ImportFontDialog extends Dialog {
         		updateVisibilities();        			
         		rasterFont.reset();
         		rasterFont.setAntialiased(antialiased);
-				generateGlyphImages(charactersToImport.getText(), -1, -1, 0, 0);
+				generateGlyphImages(charactersToImport.getText(), -1, -1);
         	}
         });
         FormData fd_btnAntialiased = new FormData();
@@ -449,7 +457,7 @@ public class ImportFontDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				showBounds = ((Button)(e.widget)).getSelection();
-				generateGlyphImages(charactersToImport.getText(), -1, -1, 0, 0);
+				generateGlyphImages(charactersToImport.getText(), -1, -1);
 			}
 		});
 		FormData fd_btnShowGlyphBoundaries = new FormData();
@@ -463,7 +471,7 @@ public class ImportFontDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				showBaseline = ((Button)(e.widget)).getSelection();
-				generateGlyphImages(charactersToImport.getText(), -1, -1, 0, 0);
+				generateGlyphImages(charactersToImport.getText(), -1, -1);
 			}
 		});
 		FormData fd_btnShowBaseline = new FormData();
@@ -495,7 +503,7 @@ public class ImportFontDialog extends Dialog {
         		editable &= !antialiased && zoomFactor == 8;
 				updateVisibilities();
 
-				generateGlyphImages(charactersToImport.getText(), -1, -1, 0, 0);
+				generateGlyphImages(charactersToImport.getText(), -1, -1);
         	}
         });
         FormData fd_zoom = new FormData();
@@ -518,6 +526,7 @@ public class ImportFontDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				editable = ((Button)(e.widget)).getSelection();
 				updateVisibilities();
+				generateGlyphImages(charactersToImport.getText(), -1, -1);
 			}
 		});
 		FormData fd_btnEnableEdit = new FormData();
@@ -763,7 +772,7 @@ public class ImportFontDialog extends Dialog {
 		fontPreviewScroller.setMinSize(fontPreviewPane.computeSize(r.width, SWT.DEFAULT));
 	}
 
-	private void generateGlyphImages( String chars, double fsize, int only, int trimL, int trimR ) {
+	private void generateGlyphImages(String chars, double fsize, int only) {
 		
 		if ( chars == null ) {
 			return;
@@ -781,6 +790,7 @@ public class ImportFontDialog extends Dialog {
 		fontPreviewPane.setSize(size);
 		
 		chars = buildRange( chars );
+		range = chars;
 		
 		if ( fsize < 0 ) {
 			int sel = fontSizeCombo.getSelectionIndex();
@@ -973,7 +983,7 @@ public class ImportFontDialog extends Dialog {
 						spinnerL.setSelection(0);
 						spinnerR.setSelection(0);
 						updateVisibilities();
-						generateGlyphImages(charactersToImport.getText(), -1, c, 0, 0);
+						generateGlyphImages(charactersToImport.getText(), -1, c);
 						lTrim = 0;
 						rTrim = 0;
 					} else if (selected == c) {
@@ -989,14 +999,14 @@ public class ImportFontDialog extends Dialog {
 						if (ptr < glyph.length) {								
 							glyph[ptr] = glyph[ptr] == 0 ? 0xFFFFFF : 0;
 							rasterFont.addGlyph(c, glyph, w);								
-							generateGlyphImages(charactersToImport.getText(), -1, c, 0, 0);
+							generateGlyphImages(charactersToImport.getText(), -1, c);
 						}
 					} else {
 						selected = '\0';
 						spinnerL.setSelection(0);
 						spinnerR.setSelection(0);
 						updateVisibilities();
-						generateGlyphImages(charactersToImport.getText(), -1, -1, 0, 0);
+						generateGlyphImages(charactersToImport.getText(), -1, -1);
 						lTrim = 0;
 						rTrim = 0;
 					}
@@ -1056,6 +1066,16 @@ public class ImportFontDialog extends Dialog {
 //				g.drawString("" + c, 0, fm.getAscent());
 		}
 
+		if (zoomFactor >= 8 && editable) {
+			g.setColor(glyphGridColor);
+			for (int x = 0; x < width; x++) {
+				g.drawLine(x * zoomFactor, 0, x * zoomFactor, height * zoomFactor - 1);
+			}
+			for (int y = 0; y < height; y++) {
+				g.drawLine(0, y * zoomFactor, width * zoomFactor - 1, y * zoomFactor);
+			}
+		}
+		
 		if ( showBounds ) {
 			g.setColor(Color.RED);
 			g.drawLine(0, top * zoomFactor, width * zoomFactor, top * zoomFactor);

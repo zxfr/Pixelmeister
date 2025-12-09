@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
@@ -153,13 +154,57 @@ public class LCD {
 		
 		Image clone;
 
+		int zoom = DeviceView.zoomFactor;
 		if ( DataLayerView.deviceScroll != 0 ) {
 			clone = new Image( display, width * DeviceView.zoomFactor, height * DeviceView.zoomFactor );
 			GC gc = new GC(clone);
 			gc.drawImage(img, 0, 0, width, height, DataLayerView.deviceScroll, 0, width * DeviceView.zoomFactor, height * DeviceView.zoomFactor);
 			gc.dispose();
 		} else {
-			clone = new Image( display, img.getImageData() );
+			if (zoom > 1) {
+				ImageData id = img.getImageData();
+				ImageData newData = new ImageData(DataLayerView.deviceWidth * zoom, DataLayerView.deviceHeight * zoom, id.depth, id.palette);
+
+				clone = new Image( display, DataLayerView.deviceWidth * zoom, DataLayerView.deviceHeight * zoom );
+				GC gc = new GC(clone);
+				gc.drawLine(0, 0, DataLayerView.deviceWidth * zoom, DataLayerView.deviceHeight * zoom);
+				
+				Color cc = null;
+				int prev = 0;
+				for (int yy = 0; yy < DataLayerView.deviceHeight; yy++ ) {
+					for (int xx = 0; xx < DataLayerView.deviceWidth; xx++ ) {
+						
+						int px = DataLayerView.landscapeViewer ? id.getPixel(yy, DataLayerView.deviceWidth - xx - 1) : id.getPixel(xx, yy);
+						
+						for (int i = 0; i < zoom; i++) {
+							for (int j = 0; j < zoom; j++) {
+								newData.setPixel(xx*zoom + i, yy*zoom + j, px);
+							}
+						}
+					}
+				}
+				clone = new Image(display,  newData);
+
+				if ( DataLayerView.landscapeViewer ) {
+					id = clone.getImageData();
+					newData = new ImageData(DataLayerView.deviceHeight*zoom, DataLayerView.deviceWidth*zoom, id.depth, id.palette);
+					for ( int i = 0; i < DataLayerView.deviceWidth*zoom; i++ ) {
+						for ( int j = 0; j < DataLayerView.deviceHeight*zoom; j++ ) {
+							newData.setPixel(j, DataLayerView.deviceWidth*zoom - 1 - i, id.getPixel(i, j));
+						}
+					}
+					clone = new Image(display,  newData);
+				}
+						
+
+				gc.dispose();				
+			} else {				
+//				if ( DataLayerView.landscapeViewer ) {
+//					clone = img; // save one cloning operation
+//				} else {
+					clone = new Image( display, img.getImageData() );
+//				}
+			}
 		}
 		
 		DataLayerView.setDisplayImage(clone, x, y, width * DeviceView.zoomFactor, height * DeviceView.zoomFactor, true);

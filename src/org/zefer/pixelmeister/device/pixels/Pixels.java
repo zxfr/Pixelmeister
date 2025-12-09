@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.swt.SWT;
@@ -124,6 +125,11 @@ public class Pixels {
 	private int textWrapMarginLeft;
 	private int textWrapMarginBottom;
 	private RGB textWrapScrollFill;
+	
+	private boolean autoKerning;
+	private int forceKerningGap;
+	private int[] buffer;
+	private int bufw;		
 	
 	HashMap<String, TreeSet> fontStats = new HashMap<String, TreeSet>();
 	
@@ -1864,7 +1870,7 @@ public class Pixels {
 		
 		int height = bytes[4];
 		
-		drawGlyph(fontType, false, xx, yy, height, bytes, 1, bytes.length-1); 
+		drawGlyph(fontType, false, xx, yy, height, bytes, 1, bytes.length-1, false); 
 	}
 
 	public void cleanIcon(final int xx, final int yy, final int[] bytes) {
@@ -1876,7 +1882,7 @@ public class Pixels {
 		
 		int height = bytes[4];
 		
-		drawGlyph(fontType, true, xx, yy, height, bytes, 1, bytes.length-1); 
+		drawGlyph(fontType, true, xx, yy, height, bytes, 1, bytes.length-1, false); 
 	}
 
 	
@@ -2126,7 +2132,7 @@ public class Pixels {
 		return breakPos;
 	}
 
-	private void printString(final int xx, final int yy, final String text, final int[] kerning, final boolean clean) {
+	private void printString(final int xx, final int yy, final String text, final int[] xkerning, final boolean clean) {
 
 		if (DataLayerView.stop || display == null || display.isDisposed()) {
 			return;
@@ -2174,7 +2180,12 @@ public class Pixels {
 //		System.out.println( "baseline: " + baseline );
 		
 		atomicAction++;
-		
+
+		int[] kerning = xkerning;
+		if (autoKerning && kerning == null && fontType == BITMASK_FONT) {
+			kerning = computeKerning(text);
+		}
+
 		int kernPtr = 0;
 		int kern = -100; // no kerning
 
@@ -2256,7 +2267,7 @@ public class Pixels {
 						break;
 					}
 
-					drawGlyph(fontType, clean, caretX, caretY, glyphHeight, currentFont, ptr, length); 
+					drawGlyph(fontType, clean, caretX, caretY, glyphHeight, currentFont, ptr, length, false); 
 					break;
 				}
 				ptr += length;
@@ -2480,16 +2491,188 @@ public class Pixels {
     		}
     	} while ( repeat == 0 || repeat > 1 );
     }
-    
+
+	public void autoKerning(boolean enable, int forceGap) {
+		autoKerning = enable;
+		forceKerningGap = forceGap;
+	}
 	
+	private void drawVirtualLine(int x1, int y1, int x2, int y2) {
+		if (x1 == x2) {
+			for (int y = y1; y <= y2; y++) {
+				buffer[y * bufw + x1] = fgColor.getRed() + fgColor.getGreen() + fgColor.getBlue();
+			}
+		} else if (y1 == y2) {
+			for (int x = x1; x <= x2; x++) {
+				buffer[y1 * bufw + x] = fgColor.getRed() + fgColor.getGreen() + fgColor.getBlue();
+			}			
+		}
+	}
+
+	private int[] getGlyphBytes(char c) {
+		int ptr = getGlyphPtr(c);
+		
+		int glyphHeight = currentFont[3];
+		int width = 0xff & currentFont[ptr + 4];
+		int length = (((int)(currentFont[ptr + 2] & 0xff) << 8) + (int)(currentFont[ptr + 3] & 0xff));
+		int fontType = currentFont[2];
+		
+		buffer = new int[width * glyphHeight];
+		bufw = width;
+
+		drawGlyph(fontType, false, 0, 0, glyphHeight, currentFont, ptr, length, true);
+
+		/*
+		System.out.println("\n" + c);
+		for (int y = 0; y < glyphHeight; y++) {
+			for (int x = 0; x < width; x++) {
+				System.out.print(buffer[y * width + x] == 0 ? "O" : ".");
+			}
+			System.out.println();
+		}
+		*/
+		
+		return buffer;
+	}
+
+	private int getGlyphPtr(char c) {
+		int result = 0;
+		int ptr = HEADER_LENGTH;
+		while ( ptr < currentFont.length ) {
+			char cx = (char)(((int)currentFont[ptr + 0] << 8) + currentFont[ptr + 1]);			
+			if ( cx == 0 ) {
+				break; // END OF FONT
+			}
+			
+			int length = (((int)(currentFont[ptr + 2] & 0xff) << 8) + (int)(currentFont[ptr + 3] & 0xff));
+			if ( length < 8 ) {
+				break;
+			}
+			
+			if ( cx == c ) {
+				return ptr;
+			}
+			ptr += length;
+		}
+		return result;
+	}
+
+	private int[] computeKerning(String range) {
+		
+		int[] result = new int[range.length()+1];
+		
+		int h = currentFont[3];
+		int[] bb1 = null;
+		int w1 = 0;
+		for ( int i = 0; i < range.length() - 1; i++ ) {
+			char c1 = range.charAt(i);
+			char c2 = range.charAt(i+1);
+			if (c1 == ' ' || c2 == ' ') {
+				continue;
+			}
+			
+			int gap = forceKerningGap;
+			if (c1 == ',' || c1 == '.' || c1 == '"' || c1 == '\'' || c1 == '_' || c1 == '`' || c1 == '^' ||
+					c2 == ',' || c2 == '.' || c2 == '"' || c2 == '\'' || c2 == '_' || c2 == '`' || c2 == '^') {
+				
+				int ptr = getGlyphPtr(c1);
+				int marginRight = 0x7f & currentFont[ptr + 7];				
+				if ((0x80 & currentFont[ptr + 5]) > 0) {
+					marginRight = 0;
+					bb1 = getGlyphBytes(c1);
+					int width = 0xff & currentFont[getGlyphPtr(c1) + 4];
+					for (int nf = 0; nf < width; nf++ ) {
+						for ( int y = 0; y < h; y++ ) {
+							if (bb1[y * width + width - nf - 1] == 0) {
+								marginRight = nf;
+//								System.out.println(c1 + " marginRight: " + nf + "px");
+								break;
+							}
+						}
+						if (marginRight > 0) {
+							break;
+						}
+					}
+				}
+				ptr = getGlyphPtr(c2);
+				int marginLeft = 0x7f & currentFont[ptr + 5];
+				int n = marginRight + marginLeft;
+				
+//				System.out.println(c1 + ":" + c2 + " " + marginRight + "+" + marginLeft);
+				n -= gap - 1;
+				result[i] = -(n-1);
+				continue;
+			}
+						
+			bb1 = getGlyphBytes(c1);
+			w1 = 0xff & currentFont[getGlyphPtr(c1) + 4];
+
+			int[] bb2 = getGlyphBytes(c2);
+			int w2 = 0xff & currentFont[getGlyphPtr(c2) + 4];
+
+			int lcol[] = new int[h]; 
+			int rcol[] = new int[h]; 
+			
+			int n = 1;
+			for (; n < w1 && n < w2; n++) {
+				boolean overlap = false;
+				for (int nf = 1; nf <= n; nf++ ) {
+					for ( int y = 0; y < h; y++ ) {
+						rcol[y] = bb2[y * w2 + nf - 1];
+					}
+
+					for ( int y = 0; y < h; y++ ) {
+						lcol[y] = bb1[y * w1 + w1 - nf]; 
+					}
+					
+					for ( int y = 0; y < h; y++ ) {
+						if (lcol[y] != 0 && rcol[y] != 0) {
+							overlap = true;
+							break;
+						}
+						
+						for (int z = 0; z < gap / 3 + 1; z++) {
+							if (y > gap && lcol[y-1-z] != 0 && rcol[y] != 0 ||
+									y < h-gap-1 && lcol[y+1+z] != 0 && rcol[y] != 0) {										
+								overlap = true;
+								break;
+							}
+						}
+						if (overlap) {
+							break;
+						}										
+					}
+					if (overlap) {
+						break;
+					}
+				}
+				
+				if (overlap) {
+					break;
+				}
+			}
+
+			n -= gap - 1;
+
+			result[i] = -(n-1);
+			
+//			if (n > 0) {
+//				System.out.println("'" + c1 + "', '" + c2 + "', " + (n - 1) + "," );
+//			}
+		}
+		result[range.length()] = -100;
+
+		return result;
+	}
+
 	private void drawGlyph(final int fontType, final boolean clean, final int xx, final int yy, 
-			final int glyphHeight, final int[] data, final int ptr, final int length) {
+			final int glyphHeight, final int[] data, final int ptr, final int length, final boolean virtual) {
 
 		if ( Display.getCurrent() == null ) {
 			display.syncExec(new Runnable() {
 				public void run() {
 //					debug(name + "("+xx+", "+yy+","+text+", kerning)");
-					drawGlyph(fontType, clean, xx, yy, glyphHeight, data, ptr, length);
+					drawGlyph(fontType, clean, xx, yy, glyphHeight, data, ptr, length, virtual);
 				}
 			});
 			return;
@@ -2557,17 +2740,26 @@ public class Pixels {
 
 					if ( glyphPrintMode == FILL_TEXT_BACKGROUND && prev != p1 ) {
 						setColor(bg);
-						if ( vraster ) {
-							if ( prev < 0 ) {
-								fillRectangle(xx, yy, marginLeft - xx + 1, glyphHeight + 1);
+						if (virtual) {
+							if ( vraster ) {
+								drawVirtualLine(marginLeft + p1, yy, marginLeft + p1, yy + glyphHeight);
 							} else {
-								drawLine(marginLeft + p1, yy, marginLeft + p1, yy + glyphHeight);
+								drawVirtualLine(xx, marginTop + p1, xx + glyphWidth, marginTop + p1);
 							}
-						} else {
-							if ( prev < 0 ) {
-								fillRectangle(xx, yy, glyphWidth + 1, marginTop - yy + 1);
+							
+						} else {							
+							if ( vraster ) {
+								if ( prev < 0 ) {
+									fillRectangle(xx, yy, marginLeft - xx + 1, glyphHeight + 1);
+								} else {
+									drawLine(marginLeft + p1, yy, marginLeft + p1, yy + glyphHeight);
+								}
 							} else {
-								drawLine(xx, marginTop + p1, xx + glyphWidth, marginTop + p1);
+								if ( prev < 0 ) {
+									fillRectangle(xx, yy, glyphWidth + 1, marginTop - yy + 1);
+								} else {
+									drawLine(xx, marginTop + p1, xx + glyphWidth, marginTop + p1);
+								}
 							}
 						}
 						prev = p1;
@@ -2592,10 +2784,18 @@ public class Pixels {
 							
 							while ( p2 + len > eff ) {
 								if ( color ) {
-									if ( vraster ) {
-										drawLine(x, y, x, marginTop + eff - 1);
-									} else {
-										drawLine(x, y, marginLeft + eff - 1, y);
+									if (virtual) {
+										if ( vraster ) {
+											drawVirtualLine(x, y, x, marginTop + eff - 1);
+										} else {
+											drawVirtualLine(x, y, marginLeft + eff - 1, y);
+										}										
+									} else {										
+										if ( vraster ) {
+											drawLine(x, y, x, marginTop + eff - 1);
+										} else {
+											drawLine(x, y, marginLeft + eff - 1, y);
+										}
 									}
 								}
 								if (fontType == BITMASK_FONT) {
@@ -2608,10 +2808,18 @@ public class Pixels {
 								y = vraster ? marginTop + p2 : marginTop + p1;
 								if ( glyphPrintMode == FILL_TEXT_BACKGROUND ) {
 									setColor(bg);
-									if ( vraster ) {
-										drawLine(x, yy, x, yy + glyphHeight);
-									} else {
-										drawLine(xx, y, xx + glyphWidth, y);
+									if (virtual) {
+										if ( vraster ) {
+											drawVirtualLine(x, yy, x, yy + glyphHeight);
+										} else {
+											drawVirtualLine(xx, y, xx + glyphWidth, y);
+										}
+									} else {										
+										if ( vraster ) {
+											drawLine(x, yy, x, yy + glyphHeight);
+										} else {
+											drawLine(xx, y, xx + glyphWidth, y);
+										}
 									}
 									if ( !clean ) {
 										setColor(fg);
@@ -2620,10 +2828,18 @@ public class Pixels {
 								}
 							}
 							if ( color ) {
-								if ( vraster ) {
-									drawLine(x, y, x, y + len - 1);
-								} else {
-									drawLine(x, y, x + len - 1, y);
+								if (virtual) {
+									if ( vraster ) {
+										drawVirtualLine(x, y, x, y + len - 1);
+									} else {
+										drawVirtualLine(x, y, x + len - 1, y);
+									}
+								} else {									
+									if ( vraster ) {
+										drawLine(x, y, x, y + len - 1);
+									} else {
+										drawLine(x, y, x + len - 1, y);
+									}
 								}
 							} else {
 								setColor(fg);
@@ -2637,10 +2853,18 @@ public class Pixels {
 								x = vraster ? marginLeft + p1 : marginLeft + p2;
 								y = vraster ? marginTop + p2 : marginTop + p1;
 	
-								if ( vraster ) {
-									drawLine(x, yy, x, yy + glyphHeight);
-								} else {
-									drawLine(xx, y, xx + glyphWidth, y);
+								if (virtual) {
+									if ( vraster ) {
+										drawVirtualLine(x, yy, x, yy + glyphHeight);
+									} else {
+										drawVirtualLine(xx, y, xx + glyphWidth, y);
+									}
+								} else {									
+									if ( vraster ) {
+										drawLine(x, yy, x, yy + glyphHeight);
+									} else {
+										drawLine(xx, y, xx + glyphWidth, y);
+									}
 								}
 							}
 							prev = p1;
@@ -2659,7 +2883,11 @@ public class Pixels {
 							setColor(sr, sg, sb);
 						}
 	
-						drawLine(x, y, x, y);
+						if (virtual) {
+							drawVirtualLine(x, y, x, y);
+						} else {							
+							drawLine(x, y, x, y);
+						}
 						ctr++;
 					}
 					last = p1;
@@ -2717,7 +2945,11 @@ public class Pixels {
 					}
 					int mask = 1 << (7 - j);
 					if ( (b & mask) == 0 ) {
-						drawLine(marginLeft + x + j, marginTop + y, marginLeft + x + j, marginTop + y);
+						if (virtual) {
+							drawVirtualLine(marginLeft + x + j, marginTop + y, marginLeft + x + j, marginTop + y);
+						} else {							
+							drawLine(marginLeft + x + j, marginTop + y, marginLeft + x + j, marginTop + y);
+						}
 					} 
 				}
 				last = y;

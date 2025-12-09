@@ -193,8 +193,12 @@ public class RasterFont {
 
 	public int getGlyphWidth(char c) {
 		RasterGlyph glyph = (RasterGlyph)glyphs.get(new Character(c));
-		if ( c != glyph.getChar() ) {
-			System.out.println( "got wrong glyph '" + (int)glyph.getChar() + "' for '" + (int)c + "'" );
+		if (glyph == null) {
+			System.out.println("missing glyph for '" + c + "' (" + (int)c + ")");
+			return 0;
+		}
+		if (c != glyph.getChar()) {
+			System.out.println("got wrong glyph '" + (int)glyph.getChar() + "' for '" + (int)c + "'");
 		}
 		return RasterGlyph.getWidth(glyph.glyph);
 	}

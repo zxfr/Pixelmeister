@@ -85,7 +85,7 @@ public class ImportIconDialog extends Dialog {
 
 	private static final String DIALOG_SETTINGS = "import-clipart-icon";
 
-	private static final String CLIPART_URL = "http://pd4ml.com/cliparts.htm";
+	private static final String CLIPART_URL = "https://github.com/zxfr/Pixelmeister/tree/main/i/cliparts.htm";
 	
 	protected Object result;
 	protected Shell shell;

@@ -16,7 +16,7 @@ public class GoHome extends AbstractHandler {
 //		Command command = event.getCommand();
 		IWorkbenchBrowserSupport bs = PlatformUI.getWorkbench().getBrowserSupport();		
 		try {
-			bs.createBrowser(IWorkbenchBrowserSupport.AS_VIEW, "Home", "Home", "").openURL(new URL("http://pd4ml.com/pixelmeister/index.htm"));
+			bs.createBrowser(IWorkbenchBrowserSupport.AS_VIEW, "Home", "Home", "").openURL(new URL("https://github.com/zxfr/Pixelmeister"));
 		} catch (PartInitException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {

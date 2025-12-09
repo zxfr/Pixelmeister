@@ -60,4 +60,5 @@ getCaretX() : int	getCaretX()
 getCaretY() : int	getCaretY()
 setScrollStepDelay(int ms) : void	setScrollStepDelay(ms)
 scrollText(int x, int y, String text, int scrollStep, int repeat, int maxScroll) : void	void scrollText(x, y, text, scrollStep, repeat, maxScroll)
+autoKerning(boolean enable, int forceGap) : void	autoKerning(enable, forceGap)
 
