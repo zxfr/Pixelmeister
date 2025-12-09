@@ -149,6 +149,11 @@ The library can be easily ported to any platform that supports horizontal and ve
 		printed with current font and (optionally) with given kerning info.</td>
 		<td valign="top">&nbsp;</td>
 	</tr>
+	<tr>
+		<td valign="top" width="197"><font face="Courier New" size="2">int16_t <b>autoKerning</b>(boolean enable, int forceGap);</font></td>
+		<td valign="top">Forces automatic kerning when outputting text. This mode consumes additional computing resources, which may be noticeable on low-performance MCUs.</td>
+		<td valign="top">Currently implemented only in emulators. Still requires porting to Pixels and uText libraries.</td>
+	</tr>
 </table>
 
 ## Troubleshooting
