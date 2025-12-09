@@ -1,4 +1,4 @@
-// See http://pd4ml.com/pixelmeister/ for UTEXT API documentation.
+// See https://github.com/zxfr/Pixelmeister for UTEXT API documentation.
 
 utft.setBackColor(0, 0, 0);
 utft.setColor(255, 255, 255);
