@@ -1,0 +1,43 @@
+$schema: https://api.gitbook.com/gitbook-docs.yaml
+site:
+  title: PD4ML Docs
+  structure:
+    - type: section
+      key: section-1
+      title: PD4ML Docs
+      path: pd4ml-docs
+      description: Documentation
+      icon: book-open-lines
+      default: true
+      children:
+        - type: space
+          key: space-1
+          title: PD4ML Docs
+          path: untitled
+          default: true
+          content:
+            directory: ./pd4ml-docs/untitled
+    - type: section
+      key: section-3
+      title: Features
+      path: features
+      children:
+        - type: space
+          key: space-3
+          title: Features
+          path: features
+          default: true
+          content:
+            directory: ./features
+    - type: section
+      key: section-2
+      title: PDF Tools
+      path: pdf-tools
+      children:
+        - type: space
+          key: space-2
+          title: PDF Tools
+          path: pdf-tools
+          default: true
+          content:
+            directory: ./pdf-tools
